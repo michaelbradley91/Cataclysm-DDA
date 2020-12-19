@@ -35,7 +35,7 @@
     <VcpkgAutoLink>true</VcpkgAutoLink>
     <VcpkgUserTriplet Condition="'$(Platform)'=='Win32'">x86-windows</VcpkgUserTriplet>
     <VcpkgUserTriplet Condition="'$(Platform)'=='x64'">x64-windows</VcpkgUserTriplet>
-    <VcpkgConfiguration>$(Configuration)</VcpkgConfiguration>
+    <VcpkgConfiguration>Release</VcpkgConfiguration>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration">
@@ -110,7 +110,7 @@
       <Optimization>Disabled</Optimization>
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <ConformanceMode>false</ConformanceMode>
-      <PreprocessorDefinitions>_DEBUG;_HAS_ITERATOR_DEBUGGING=0;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_HAS_ITERATOR_DEBUGGING=0;_ITERATOR_DEBUG_LEVEL=0;_SCL_SECURE=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
   </ItemDefinitionGroup>
