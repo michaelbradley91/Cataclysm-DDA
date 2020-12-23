@@ -13,6 +13,7 @@
 #include <vector>
 #include <iterator>
 #include <utility>
+#include <sstream>
 
 #include "debug.h"
 #include "cata_utility.h"
@@ -126,9 +127,17 @@ const char *cata_files::eol()
 
 std::string read_entire_file( const std::string &path )
 {
-    std::ifstream infile( path, std::ifstream::in | std::ifstream::binary );
-    return std::string( std::istreambuf_iterator<char>( infile ),
-                        std::istreambuf_iterator<char>() );
+    std::ifstream in( path, std::ios::in | std::ios::binary );
+    if( in ) {
+        std::string contents;
+        in.seekg( 0, std::ios::end );
+        contents.resize( in.tellg() );
+        in.seekg( 0, std::ios::beg );
+        in.read( &contents[0], contents.size() );
+        in.close();
+        return( contents );
+    }
+    throw( errno );
 }
 
 namespace
