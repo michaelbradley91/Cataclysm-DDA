@@ -180,8 +180,8 @@ struct number_sci_notation {
 class JsonIn
 {
     private:
-        std::istringstream stream;
         const std::string *json;
+        int size;
         int current_position = 0;
         // Used for error message and thus intentionally untranslated
         std::string name = "<unknown source file>";
@@ -196,10 +196,11 @@ class JsonIn
         void end_value();
 
     public:
-        JsonIn( const std::string &s ) : json( &s ), stream( s ) {
+        JsonIn( const std::string &s ) : json( &s ), size( s.size() ) {
             index_json();
         }
-        JsonIn( const std::string &s, const std::string &name ) : json( &s ), stream( s ), name( name ) {
+        JsonIn( const std::string &s, const std::string &name ) : json( &s ), size( s.size() ),
+            name( name ) {
             index_json();
         }
         JsonIn( const JsonIn & ) = delete;
@@ -212,10 +213,13 @@ class JsonIn
             ate_separator = s;
         }
 
-        int tell(); // get current stream position
+        int tell() const; // get current stream position
         void seek( int pos ); // seek to specified stream position
-        char peek(); // what's the next char gonna be?
-        bool good(); // whether stream is ok
+        char peek() const; // what's the next char gonna be?
+        char get(); // get the next character in the stream
+        void get( char &ch );
+        void get( char *ch, int n );
+        static bool good(); // whether stream is ok
 
         // advance seek head to the next non-whitespace character
         void eat_whitespace();
@@ -556,6 +560,7 @@ class JsonIn
         number_sci_notation get_any_number();
         // Calls get_any_number() then applies operations common to all integer types.
         number_sci_notation get_any_int();
+        bool get_escaped_or_unicode( std::string &s, std::string &err );
 };
 
 /* JsonOut
