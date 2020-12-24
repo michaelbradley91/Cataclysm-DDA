@@ -173,21 +173,43 @@ struct number_sci_notation {
  * If an if;else if;... is missing the "else", it /will/ cause bugs,
  * so preindexing as a JsonObject is safer, as well as tidier.
  */
+#include <string>
+#include <sstream>
+#include <iterator>
+
 class JsonIn
 {
     private:
         std::istream *stream;
+        std::string *raw_string = nullptr;
         // Used for error message and thus intentionally untranslated
         std::string name = "<unknown source file>";
         bool ate_separator = false;
 
+        std::map < int, std::pair<int, int>> position_to_depth_and_index;
+        std::map<int, std::vector<int>> depth_to_positions;
+
+        void index_input();
+        void index_stream();
+        void index_string();
         void skip_separator();
         void skip_pair_separator();
         void end_value();
 
     public:
-        JsonIn( std::istream &s ) : stream( &s ) {}
-        JsonIn( std::istream &s, const std::string &name ) : stream( &s ), name( name ) {}
+        JsonIn( std::istream &s ) : stream( &s ) {
+            index_input();
+        }
+        JsonIn( std::istream &s, const std::string &name ) : stream( &s ), name( name ) {
+            index_input();
+        }
+        JsonIn( std::istream &s, std::string &cs ) : stream( &s ), raw_string( &cs ) {
+            index_input();
+        }
+        JsonIn( std::istream &s, const std::string &name, std::string &cs ) : stream( &s ), name( name ),
+            raw_string( &cs ) {
+            index_input();
+        }
         JsonIn( const JsonIn & ) = delete;
         JsonIn &operator=( const JsonIn & ) = delete;
 

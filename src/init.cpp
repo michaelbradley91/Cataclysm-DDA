@@ -436,10 +436,11 @@ void DynamicDataLoader::load_data_from_path( const std::string &path, const std:
     // iterate over each file
     for( const std::string &file : files ) {
         // and stuff it into ram
-        std::istringstream iss( read_entire_file( file ) );
+        std::string file_contents = read_entire_file( file );
+        std::istringstream iss( file_contents );
         try {
             // parse it
-            JsonIn jsin( iss, file );
+            JsonIn jsin( iss, file, file_contents );
             load_all_from_json( jsin, src, ui, path, file );
         } catch( const JsonError &err ) {
             throw std::runtime_error( err.what() );
