@@ -14,6 +14,7 @@
 #include "cursesdef.h"
 #include "debug.h"
 #include "faction.h"
+#include "filesystem.h"
 #include "game.h"
 #include "generic_factory.h"
 #include "iexamine.h"
@@ -1212,8 +1213,8 @@ void zone_manager::load_zones()
 {
     std::string savefile = PATH_INFO::player_base_save_path() + ".zones.json";
 
-    read_from_file_optional( savefile, [&]( std::istream & fin ) {
-        JsonIn jsin( fin );
+    read_entire_file_optional( savefile, [&]( const std::string & file ) {
+        JsonIn jsin( file );
         deserialize( jsin );
     } );
     revert_vzones();

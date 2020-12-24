@@ -126,8 +126,7 @@ void DynamicDataLoader::load_deferred( deferred_json &data )
         auto it = data.begin();
         for( size_t idx = 0; idx != n; ++idx ) {
             try {
-                std::istringstream str( it->first );
-                JsonIn jsin( str );
+                JsonIn jsin( it->first );
                 JsonObject jo = jsin.get_object();
                 load_object( jo, it->second );
             } catch( const std::exception &err ) {
@@ -437,10 +436,9 @@ void DynamicDataLoader::load_data_from_path( const std::string &path, const std:
     for( const std::string &file : files ) {
         // and stuff it into ram
         std::string file_contents = read_entire_file( file );
-        std::istringstream iss( file_contents );
         try {
             // parse it
-            JsonIn jsin( iss, file, file_contents );
+            JsonIn jsin( file_contents, file );
             load_all_from_json( jsin, src, ui, path, file );
         } catch( const JsonError &err ) {
             throw std::runtime_error( err.what() );

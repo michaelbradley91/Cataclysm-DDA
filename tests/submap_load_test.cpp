@@ -14,7 +14,7 @@ static const point corner_se( 0, SEEY - 1 );
 static const point corner_sw( SEEX - 1, SEEY - 1 );
 static const point random_pt( 4, 7 );
 
-static std::istringstream submap_empty_ss(
+static std::string submap_empty_s(
     "{\n"
     "  \"version\": 31,\n"
     "  \"coordinates\": [ 0, 0, 0 ],\n"
@@ -33,7 +33,7 @@ static std::istringstream submap_empty_ss(
     "  \"computers\": [ ]\n"
     "}\n"
 );
-static std::istringstream submap_terrain_rle_ss(
+static std::string submap_terrain_rle_s(
     "{\n"
     "  \"version\": 31,\n"
     "  \"coordinates\": [ 0, 0, 0 ],\n"
@@ -61,7 +61,7 @@ static std::istringstream submap_terrain_rle_ss(
     "  \"computers\": [ ]\n"
     "}\n"
 );
-static std::istringstream submap_furniture_ss(
+static std::string submap_furniture_s(
     "{\n"
     "  \"version\": 31,\n"
     "  \"coordinates\": [ 0, 0, 0 ],\n"
@@ -86,7 +86,7 @@ static std::istringstream submap_furniture_ss(
     "  \"computers\": [ ]\n"
     "}\n"
 );
-static std::istringstream submap_trap_ss(
+static std::string submap_trap_s(
     "{\n"
     "  \"version\": 31,\n"
     "  \"coordinates\": [ 0, 0, 0 ],\n"
@@ -111,7 +111,7 @@ static std::istringstream submap_trap_ss(
     "  \"computers\": [ ]\n"
     "}\n"
 );
-static std::istringstream submap_rad_ss(
+static std::string submap_rad_s(
     "{\n"
     "  \"version\": 31,\n"
     "  \"coordinates\": [ 0, 0, 0 ],\n"
@@ -140,7 +140,7 @@ static std::istringstream submap_rad_ss(
     "  \"computers\": [ ]\n"
     "}\n"
 );
-static std::istringstream submap_item_ss(
+static std::string submap_item_s(
     "{\n"
     "  \"version\": 31,\n"
     "  \"coordinates\": [ 0, 0, 0 ],\n"
@@ -272,7 +272,7 @@ static std::istringstream submap_item_ss(
     "  \"computers\": [ ]\n"
     "}\n"
 );
-static std::istringstream submap_field_ss(
+static std::string submap_field_s(
     "{\n"
     "  \"version\": 31,\n"
     "  \"coordinates\": [ 0, 0, 0 ],\n"
@@ -298,7 +298,7 @@ static std::istringstream submap_field_ss(
     "  \"computers\": [ ]\n"
     "}\n"
 );
-static std::istringstream submap_graffiti_ss(
+static std::string submap_graffiti_s(
     "{\n"
     "  \"version\": 31,\n"
     "  \"coordinates\": [ 0, 0, 0 ],\n"
@@ -324,7 +324,7 @@ static std::istringstream submap_graffiti_ss(
     "  \"computers\": [ ]\n"
     "}\n"
 );
-static std::istringstream submap_spawns_ss(
+static std::string submap_spawns_s(
     "{\n"
     "  \"version\": 31,\n"
     "  \"coordinates\": [ 0, 0, 0 ],\n"
@@ -349,7 +349,7 @@ static std::istringstream submap_spawns_ss(
     "  \"computers\": [ ]\n"
     "}\n"
 );
-static std::istringstream submap_vehicle_ss(
+static std::string submap_vehicle_s(
     "{\n"
     "  \"version\": 31,\n"
     "  \"coordinates\": [ 0, 0, 0 ],\n"
@@ -552,7 +552,7 @@ static std::istringstream submap_vehicle_ss(
     "  \"computers\": [ ]\n"
     "}\n"
 );
-static std::istringstream submap_construction_ss(
+static std::string submap_construction_s(
     "{\n"
     "  \"version\": 31,\n"
     "  \"coordinates\": [ 0, 0, 0 ],\n"
@@ -648,7 +648,7 @@ static std::istringstream submap_construction_ss(
     "  \"computers\": [ ]\n"
     "}\n"
 );
-static std::istringstream submap_computer_ss(
+static std::string submap_computer_s(
     "{\n"
     "  \"version\": 31,\n"
     "  \"coordinates\": [ 0, 0, 0 ],\n"
@@ -696,7 +696,7 @@ static std::istringstream submap_computer_ss(
     "  ]\n"
     "}\n"
 );
-static std::istringstream submap_cosmetic_ss(
+static std::string submap_cosmetic_s(
     "{\n"
     "  \"version\": 31,\n"
     "  \"coordinates\": [ 0, 0, 0 ],\n"
@@ -728,19 +728,19 @@ static std::istringstream submap_cosmetic_ss(
 static_assert( SEEX == 12, "Reminder to update submap tests when SEEX changes." );
 static_assert( SEEY == 12, "Reminder to update submap tests when SEEY changes." );
 
-static JsonIn submap_empty( submap_empty_ss );
-static JsonIn submap_terrain_rle( submap_terrain_rle_ss );
-static JsonIn submap_furniture( submap_furniture_ss );
-static JsonIn submap_trap( submap_trap_ss );
-static JsonIn submap_rad( submap_rad_ss );
-static JsonIn submap_item( submap_item_ss );
-static JsonIn submap_field( submap_field_ss );
-static JsonIn submap_graffiti( submap_graffiti_ss );
-static JsonIn submap_spawns( submap_spawns_ss );
-static JsonIn submap_vehicle( submap_vehicle_ss );
-static JsonIn submap_construction( submap_construction_ss );
-static JsonIn submap_computer( submap_computer_ss );
-static JsonIn submap_cosmetic( submap_cosmetic_ss );
+static JsonIn submap_empty( submap_empty_s );
+static JsonIn submap_terrain_rle( submap_terrain_rle_s );
+static JsonIn submap_furniture( submap_furniture_s );
+static JsonIn submap_trap( submap_trap_s );
+static JsonIn submap_rad( submap_rad_s );
+static JsonIn submap_item( submap_item_s );
+static JsonIn submap_field( submap_field_s );
+static JsonIn submap_graffiti( submap_graffiti_s );
+static JsonIn submap_spawns( submap_spawns_s );
+static JsonIn submap_vehicle( submap_vehicle_s );
+static JsonIn submap_construction( submap_construction_s );
+static JsonIn submap_computer( submap_computer_s );
+static JsonIn submap_cosmetic( submap_cosmetic_s );
 
 static void load_from_jsin( submap &sm, JsonIn &jsin )
 {

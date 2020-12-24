@@ -602,11 +602,10 @@ void worldfactory::remove_world( const std::string &worldname )
 
 void worldfactory::load_last_world_info()
 {
-    std::ifstream file( PATH_INFO::lastworld(), std::ifstream::in | std::ifstream::binary );
-    if( !file.good() ) {
+    std::string file;
+    if( !read_entire_file_optional( PATH_INFO::lastworld(), file ) ) {
         return;
     }
-
     JsonIn jsin( file );
     JsonObject data = jsin.get_object();
     last_world_name = data.get_string( "world_name" );

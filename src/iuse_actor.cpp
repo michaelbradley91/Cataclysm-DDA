@@ -659,7 +659,7 @@ int unfold_vehicle_iuse::use( player &p, item &it, bool, const tripoint & ) cons
         }
     } else {
         try {
-            JsonIn json( veh_data );
+            JsonIn json( data );
             // Load parts into a temporary vector to not override
             // cached values (like precalc, passenger_id, ...)
             std::vector<vehicle_part> parts;

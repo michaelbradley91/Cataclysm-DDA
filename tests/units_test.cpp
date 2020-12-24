@@ -47,8 +47,7 @@ TEST_CASE( "units_have_correct_ratios", "[units]" )
 
 static units::energy parse_energy_quantity( const std::string &json )
 {
-    std::istringstream buffer( json );
-    JsonIn jsin( buffer );
+    JsonIn jsin( json );
     return read_from_json_string<units::energy>( jsin, units::energy_units );
 }
 
@@ -72,8 +71,7 @@ TEST_CASE( "energy parsing from JSON", "[units]" )
 
 static time_duration parse_time_duration( const std::string &json )
 {
-    std::istringstream buffer( json );
-    JsonIn jsin( buffer );
+    JsonIn jsin( json );
     return read_from_json_string<time_duration>( jsin, time_duration::units );
 }
 
@@ -253,8 +251,7 @@ TEST_CASE( "convert_velocity", "[units][convert][velocity]" )
 
 static units::angle parse_angle( const std::string &json )
 {
-    std::istringstream buffer( json );
-    JsonIn jsin( buffer );
+    JsonIn jsin( json );
     return read_from_json_string<units::angle>( jsin, units::angle_units );
 }
 

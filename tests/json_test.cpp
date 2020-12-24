@@ -28,8 +28,7 @@ void test_serialization( const T &val, const std::string &s )
     }
     {
         INFO( "test_deserialization" );
-        std::istringstream is( s );
-        JsonIn jsin( is );
+        JsonIn jsin( s );
         T read_val;
         CHECK( jsin.read( read_val ) );
         CHECK( val == read_val );
@@ -230,8 +229,7 @@ TEST_CASE( "serialize_set", "[json]" )
 template<typename Matcher>
 static void test_translation_text_style_check( Matcher &&matcher, const std::string &json )
 {
-    std::istringstream iss( json );
-    JsonIn jsin( iss );
+    JsonIn jsin( json );
     translation trans;
     const std::string dmsg = capture_debugmsg_during( [&]() {
         jsin.read( trans );
@@ -242,8 +240,7 @@ static void test_translation_text_style_check( Matcher &&matcher, const std::str
 template<typename Matcher>
 static void test_pl_translation_text_style_check( Matcher &&matcher, const std::string &json )
 {
-    std::istringstream iss( json );
-    JsonIn jsin( iss );
+    JsonIn jsin( json );
     translation trans( translation::plural_tag {} );
     const std::string dmsg = capture_debugmsg_during( [&]() {
         jsin.read( trans );
@@ -406,8 +403,7 @@ TEST_CASE( "translation_text_style_check_error_recovery", "[json][translation]" 
             R"(  "foo. bar.",)" "\n" // NOLINT(cata-text-style)
             R"(  "foobar")" "\n"
             R"(])" "\n";
-        std::istringstream iss( json );
-        JsonIn jsin( iss );
+        JsonIn jsin( json );
         jsin.start_array();
         translation trans;
         const std::string dmsg = capture_debugmsg_during( [&]() {
@@ -440,8 +436,7 @@ TEST_CASE( "translation_text_style_check_error_recovery", "[json][translation]" 
             R"(  { "str": "foo. bar." },)" "\n" // NOLINT(cata-text-style)
             R"(  "foobar")" "\n"
             R"(])" "\n";
-        std::istringstream iss( json );
-        JsonIn jsin( iss );
+        JsonIn jsin( json );
         jsin.start_array();
         translation trans;
         const std::string dmsg = capture_debugmsg_during( [&]() {
@@ -472,8 +467,7 @@ TEST_CASE( "translation_text_style_check_error_recovery", "[json][translation]" 
 static void test_get_string( const std::string &str, const std::string &json )
 {
     CAPTURE( json );
-    std::istringstream iss( json );
-    JsonIn jsin( iss );
+    JsonIn jsin( json );
     CHECK( jsin.get_string() == str );
 }
 
@@ -481,8 +475,7 @@ template<typename Matcher>
 static void test_get_string_throws_matches( Matcher &&matcher, const std::string &json )
 {
     CAPTURE( json );
-    std::istringstream iss( json );
-    JsonIn jsin( iss );
+    JsonIn jsin( json );
     CHECK_THROWS_MATCHES( jsin.get_string(), JsonError, matcher );
 }
 
@@ -492,8 +485,7 @@ static void test_string_error_throws_matches( Matcher &&matcher, const std::stri
 {
     CAPTURE( json );
     CAPTURE( offset );
-    std::istringstream iss( json );
-    JsonIn jsin( iss );
+    JsonIn jsin( json );
     CHECK_THROWS_MATCHES( jsin.string_error( "<message>", offset ), JsonError, matcher );
 }
 

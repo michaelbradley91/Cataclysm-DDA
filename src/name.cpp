@@ -8,6 +8,7 @@
 
 #include "cata_utility.h"
 #include "enum_traits.h"
+#include "filesystem.h"
 #include "json.h"
 #include "rng.h"
 #include "string_formatter.h"
@@ -85,7 +86,9 @@ static void load( JsonIn &jsin )
 
 void load_from_file( const std::string &filename )
 {
-    read_from_file_json( filename, load );
+    const auto contents = read_entire_file( filename );
+    JsonIn in( contents, filename );
+    load( in );
 }
 
 // get name groups for which searchFlag is a subset.

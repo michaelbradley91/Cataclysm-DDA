@@ -101,9 +101,9 @@ void past_games_info::ensure_loaded()
 
     for( const std::pair<std::string, std::string> &filename_pair : sortable_filenames ) {
         const std::string &filename = filename_pair.second;
-        std::istringstream iss( read_entire_file( filename ) );
+        auto contents = read_entire_file( filename );
         try {
-            JsonIn jsin( iss );
+            JsonIn jsin( contents );
             info_.push_back( past_game_info( jsin ) );
         } catch( const JsonError &err ) {
             debugmsg( "Error reading memorial file %s: %s", filename, err.what() );

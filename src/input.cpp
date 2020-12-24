@@ -267,7 +267,9 @@ void input_manager::load( const std::string &file_name, bool is_user_preferences
         return;
     }
 
-    JsonIn jsin( data_file, file_name );
+    auto data = read_entire_file( data_file );
+
+    JsonIn jsin( data, file_name );
 
     //Crawl through once and create an entry for every definition
     jsin.start_array();

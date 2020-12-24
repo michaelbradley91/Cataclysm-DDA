@@ -128,7 +128,15 @@ const char *cata_files::eol()
 std::string read_entire_file( const std::string &path )
 {
     std::ifstream in( path, std::ios::in | std::ios::binary );
-    if( in ) {
+    if( in && in.good() ) {
+        return read_entire_file( in );
+    }
+    throw std::runtime_error( std::string( "Failed to open json: " ) + path );
+}
+
+std::string read_entire_file( std::ifstream &in )
+{
+    if( in && in.good() ) {
         std::string contents;
         in.seekg( 0, std::ios::end );
         contents.resize( in.tellg() );
@@ -137,7 +145,35 @@ std::string read_entire_file( const std::string &path )
         in.close();
         return( contents );
     }
-    throw( errno );
+    throw std::runtime_error( std::string( "Failed to open json: " ) );
+}
+
+void read_entire_file( const std::string &path,
+                       const std::function<void( std::string & )> &reader )
+{
+    auto contents = read_entire_file( path );
+    reader( contents );
+}
+
+bool read_entire_file_optional( const std::string &path, std::string &contents )
+{
+    return read_entire_file_optional( path, [&]( std::string & json ) {
+        contents = json;
+    } );
+}
+
+bool read_entire_file_optional( const std::string &path,
+                                const std::function<void( std::string & )> &reader )
+{
+    // Note: slight race condition here, but we'll ignore it. Worst case: the file
+    // exists and got removed before reading it -> reading fails with a message
+    // Or file does not exists, than everything works fine because it's optional anyway.
+    if( file_exist( path ) ) {
+        auto contents = read_entire_file( path );
+        reader( contents );
+        return true;
+    }
+    return false;
 }
 
 namespace

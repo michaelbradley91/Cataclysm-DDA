@@ -79,8 +79,7 @@ TEST_CASE( "map_memory_survives_save_lod", "[map_memory]" )
     memory.store( jsout );
 
     INFO( "Json was: " << jsout_s.str() );
-    std::istringstream jsin_s( jsout_s.str() );
-    JsonIn jsin( jsin_s );
+    JsonIn jsin( jsout_s.str() );
     map_memory memory2;
     memory2.load( jsin );
 

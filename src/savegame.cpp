@@ -168,7 +168,8 @@ void game::unserialize( std::istream &fin )
     int tmprun = 0;
     tripoint_om_sm lev;
     point_abs_om com;
-    JsonIn jsin( fin );
+    std::string s( std::istreambuf_iterator<char>( fin ), {} );
+    JsonIn jsin( s );
     try {
         JsonObject data = jsin.get_object();
 
@@ -431,7 +432,8 @@ void overmap::load_legacy_monstergroups( JsonIn &jsin )
 void overmap::unserialize( std::istream &fin )
 {
     chkversion( fin );
-    JsonIn jsin( fin );
+    std::string s( std::istreambuf_iterator<char>( fin ), {} );
+    JsonIn jsin( s );
     jsin.start_object();
     while( !jsin.end_object() ) {
         const std::string name = jsin.get_member_name();
@@ -680,7 +682,8 @@ static void unserialize_array_from_compacted_sequence( JsonIn &jsin, bool ( &arr
 void overmap::unserialize_view( std::istream &fin )
 {
     chkversion( fin );
-    JsonIn jsin( fin );
+    std::string s( std::istreambuf_iterator<char>( fin ), {} );
+    JsonIn jsin( s );
     jsin.start_object();
     while( !jsin.end_object() ) {
         const std::string name = jsin.get_member_name();
@@ -1147,7 +1150,8 @@ void game::unserialize_master( std::istream &fin )
     chkversion( fin );
     try {
         // single-pass parsing example
-        JsonIn jsin( fin );
+        std::string s( std::istreambuf_iterator<char>( fin ), {} );
+        JsonIn jsin( s );
         jsin.start_object();
         while( !jsin.end_object() ) {
             std::string name = jsin.get_member_name();

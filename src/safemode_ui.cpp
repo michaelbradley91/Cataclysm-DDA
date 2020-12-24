@@ -832,24 +832,21 @@ void safemode::load( const bool is_character_in )
 {
     is_character = is_character_in;
 
-    std::ifstream fin;
-    std::string file = PATH_INFO::safemode();
+    auto file = PATH_INFO::safemode();
     if( is_character ) {
         file = PATH_INFO::player_base_save_path() + ".sfm.json";
     }
 
-    fin.open( file.c_str(), std::ifstream::in | std::ifstream::binary );
-
-    if( fin.good() ) {
+    std::string safe_mode_settings;
+    if( read_entire_file_optional( file, safe_mode_settings ) ) {
         try {
-            JsonIn jsin( fin );
+            JsonIn jsin( safe_mode_settings );
             deserialize( jsin );
         } catch( const JsonError &e ) {
             debugmsg( "Error while loading safemode settings: %s", e.what() );
         }
     }
 
-    fin.close();
     create_rules();
 }
 

@@ -25,6 +25,7 @@
 #include "color.h"
 #include "cursesdef.h"
 #include "enum_conversions.h"
+#include "filesystem.h"
 #include "game_constants.h"
 #include "input.h"
 #include "int_id.h"
@@ -3432,9 +3433,9 @@ void avatar::save_template( const std::string &name, const points_left &points )
 
 bool avatar::load_template( const std::string &template_name, points_left &points )
 {
-    return read_from_file_json( PATH_INFO::templatedir() + utf8_to_native( template_name ) +
-    ".template", [&]( JsonIn & jsin ) {
-
+    auto path = PATH_INFO::templatedir() + utf8_to_native( template_name ) + ".template";
+    return read_entire_file_optional( path, [&]( std::string & json ) {
+        JsonIn jsin( json, path );
         if( jsin.test_array() ) {
             // not a legacy template
             jsin.start_array();

@@ -180,8 +180,9 @@ struct number_sci_notation {
 class JsonIn
 {
     private:
-        std::istream *stream;
-        std::string *raw_string = nullptr;
+        std::istringstream stream;
+        const std::string *json;
+        int current_position = 0;
         // Used for error message and thus intentionally untranslated
         std::string name = "<unknown source file>";
         bool ate_separator = false;
@@ -189,26 +190,17 @@ class JsonIn
         std::map < int, std::pair<int, int>> position_to_depth_and_index;
         std::map<int, std::vector<int>> depth_to_positions;
 
-        void index_input();
-        void index_stream();
-        void index_string();
+        void index_json();
         void skip_separator();
         void skip_pair_separator();
         void end_value();
 
     public:
-        JsonIn( std::istream &s ) : stream( &s ) {
-            index_input();
+        JsonIn( const std::string &s ) : json( &s ), stream( s ) {
+            index_json();
         }
-        JsonIn( std::istream &s, const std::string &name ) : stream( &s ), name( name ) {
-            index_input();
-        }
-        JsonIn( std::istream &s, std::string &cs ) : stream( &s ), raw_string( &cs ) {
-            index_input();
-        }
-        JsonIn( std::istream &s, const std::string &name, std::string &cs ) : stream( &s ), name( name ),
-            raw_string( &cs ) {
-            index_input();
+        JsonIn( const std::string &s, const std::string &name ) : json( &s ), stream( s ), name( name ) {
+            index_json();
         }
         JsonIn( const JsonIn & ) = delete;
         JsonIn &operator=( const JsonIn & ) = delete;

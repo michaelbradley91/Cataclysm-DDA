@@ -6754,9 +6754,8 @@ bool vehicle::is_foldable() const
 
 bool vehicle::restore( const std::string &data )
 {
-    std::istringstream veh_data( data );
     try {
-        JsonIn json( veh_data );
+        JsonIn json( data );
         parts.clear();
         json.read( parts );
     } catch( const JsonError &e ) {

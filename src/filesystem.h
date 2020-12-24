@@ -16,6 +16,12 @@ bool remove_directory( const std::string &path );
 bool rename_file( const std::string &old_path, const std::string &new_path );
 
 std::string read_entire_file( const std::string &path );
+std::string read_entire_file( std::ifstream &in );
+void read_entire_file( const std::string &path,
+                       const std::function<void( std::string & )> &reader );
+bool read_entire_file_optional( const std::string &path, std::string &contents );
+bool read_entire_file_optional( const std::string &path,
+                                const std::function<void( std::string & )> &reader );
 
 namespace cata_files
 {

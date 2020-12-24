@@ -358,21 +358,6 @@ bool read_from_file( const std::string &path, const std::function<void( std::ist
     }
 }
 
-bool read_from_file_json( const std::string &path, const std::function<void( JsonIn & )> &reader )
-{
-    return read_from_file( path, [&]( std::istream & fin ) {
-        JsonIn jsin( fin, path );
-        reader( jsin );
-    } );
-}
-
-bool read_from_file( const std::string &path, JsonDeserializer &reader )
-{
-    return read_from_file_json( path, [&reader]( JsonIn & jsin ) {
-        reader.deserialize( jsin );
-    } );
-}
-
 bool read_from_file_optional( const std::string &path,
                               const std::function<void( std::istream & )> &reader )
 {
@@ -386,7 +371,8 @@ bool read_from_file_optional_json( const std::string &path,
                                    const std::function<void( JsonIn & )> &reader )
 {
     return read_from_file_optional( path, [&]( std::istream & fin ) {
-        JsonIn jsin( fin, path );
+        std::string content{ std::istreambuf_iterator<char>( fin ), std::istreambuf_iterator<char>() };
+        JsonIn jsin( content, path );
         reader( jsin );
     } );
 }
@@ -447,8 +433,7 @@ std::string serialize_wrapper( const std::function<void( JsonOut & )> &callback 
 
 void deserialize_wrapper( const std::function<void( JsonIn & )> &callback, const std::string &data )
 {
-    std::istringstream buffer( data );
-    JsonIn jsin( buffer );
+    JsonIn jsin( data );
     callback( jsin );
 }
 
