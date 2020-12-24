@@ -780,6 +780,9 @@ int JsonIn::tell() const
 }
 char JsonIn::peek() const
 {
+    if( current_position == size ) {
+        return EOF;
+    }
     return ( *json )[current_position];
 }
 bool JsonIn::good()
@@ -802,11 +805,15 @@ void JsonIn::get( char &ch )
 
 void JsonIn::get( char *ch, int n )
 {
+    if( n == 0 ) {
+        return;
+    }
     auto i = 0;
-    while( i < n && current_position < size ) {
+    while( i < n - 1 && current_position < size ) {
         get( ch[i] );
         i++;
     }
+    ch[n - 1] = '\0';
 }
 
 
@@ -1775,7 +1782,9 @@ void JsonIn::error( const std::string &message, int offset )
     rewind( 3, 240 );
     size_t startpos = tell();
     std::string buffer( pos - startpos, '\0' );
-    get( &buffer[0], pos - startpos );
+    for( auto i = 0; i < pos - startpos; i++ ) {
+        buffer[i] = get();
+    }
     auto it = buffer.begin();
     for( ; it < buffer.end() && ( *it == '\r' || *it == '\n' ); ++it ) {
         // skip starting newlines
@@ -1919,7 +1928,9 @@ std::string JsonIn::substr( size_t pos, size_t len )
     }
     ret.resize( len );
     seek( pos );
-    get( &ret[0], len );
+    for( auto i = 0; i < len; i++ ) {
+        ret[i] = get();
+    }
     return ret;
 }
 
