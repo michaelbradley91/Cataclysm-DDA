@@ -187,22 +187,14 @@ class JsonIn
         std::string name = "<unknown source file>";
         bool ate_separator = false;
 
-        std::map < int, std::pair<int, int>> position_to_depth_and_index;
-        std::map<int, std::vector<int>> depth_to_positions;
-
-        void index_json();
         void skip_separator();
         void skip_pair_separator();
         void end_value();
 
     public:
-        JsonIn( const std::string &s ) : json( &s ), size( s.size() ) {
-            index_json();
-        }
+        JsonIn( const std::string &s ) : json( &s ), size( s.size() ) {}
         JsonIn( const std::string &s, const std::string &name ) : json( &s ), size( s.size() ),
-            name( name ) {
-            index_json();
-        }
+            name( name ) {}
         JsonIn( const JsonIn & ) = delete;
         JsonIn &operator=( const JsonIn & ) = delete;
 

@@ -716,64 +716,6 @@ void add_array_to_set( std::set<std::string> &s, const JsonObject &json, const s
     }
 }
 
-void JsonIn::index_json()
-{
-    std::map<int, int> position_to_depth;
-
-    /*
-     * Depth is increased whenever:
-     * 1. We encounter a {
-     * 2. We encounter a [
-     *
-     * While we are not in a string. We can skip a string using the existing algorithm
-     * whenever we see "
-     *
-     */
-    auto depth = 0;
-    auto inside_string = false;
-    auto backslash = false;
-    auto position = 0;
-    for( auto c : *json ) {
-        position++;
-        if( backslash ) {
-            backslash = false;
-            continue;
-        }
-        if( inside_string ) {
-            if( c == '"' ) {
-                inside_string = false;
-            } else if( c == '\\' ) {
-                backslash = true;
-            } else if( c == '\r' || c == '\n' ) {
-                error( "string not closed before end of line", -1 );
-            }
-            continue;
-        }
-        if( c == '"' ) {
-            inside_string = true;
-            continue;
-        }
-        if( c == '{' || c == '[' ) {
-            position_to_depth[position - 1] = depth;
-            depth++;
-        } else if( c == '}' || c == ']' ) {
-            depth--;
-            position_to_depth[position - 1] = depth;
-        }
-    }
-
-    for( auto const &e : position_to_depth ) {
-        auto position = e.first;
-        depth = e.second;
-        if( !depth_to_positions.count( depth ) ) {
-            depth_to_positions[depth] = std::vector<int>();
-        }
-        depth_to_positions[depth].push_back( position );
-        position_to_depth_and_index[position] =
-            std::pair<int, int>( depth, depth_to_positions[depth].size() - 1 );
-    }
-}
-
 int JsonIn::tell() const
 {
     return current_position;
@@ -959,34 +901,20 @@ void JsonIn::skip_value()
 
 void JsonIn::skip_object()
 {
-    // Should be able to skip based on depth position
-    const auto details = position_to_depth_and_index[tell()];
-    const auto depth = details.first;
-    const auto index = details.second;
-    auto v = depth_to_positions[depth];
-    if( index + 1 >= v.size() ) {
-        current_position = size;
-    } else {
-        current_position = v[index + 1];
+    start_object();
+    while( !end_object() ) {
+        skip_member();
     }
-    ate_separator = false;
-    end_object();
+    // end_value called by end_object
 }
 
 void JsonIn::skip_array()
 {
-    // Should be able to skip based on depth position
-    const auto details = position_to_depth_and_index[tell()];
-    const auto depth = details.first;
-    const auto index = details.second;
-    auto v = depth_to_positions[depth];
-    if( index + 1 >= v.size() ) {
-        current_position = size;
-    } else {
-        current_position = v[index + 1];
+    start_array();
+    while( !end_array() ) {
+        skip_value();
     }
-    ate_separator = false;
-    end_array();
+    // end_value called by end_array
 }
 
 void JsonIn::skip_true()

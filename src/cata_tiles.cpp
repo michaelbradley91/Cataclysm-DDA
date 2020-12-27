@@ -1139,10 +1139,11 @@ void cata_tiles::draw( const point &dest, const tripoint &center, int width, int
                                            cache ) );
     };
 
-    for( int row = min_row; row < max_row; row ++ ) {
-        std::vector<tile_render_info> draw_points;
-        draw_points.reserve( max_col );
-        for( int col = min_col; col < max_col; col ++ ) {
+    std::vector<std::vector<tripoint>> view_positions( max_row );
+    for( auto row = min_row; row < max_row; row++ ) {
+        auto row_positions = view_positions[row - min_row];
+        row_positions.reserve( max_col );
+        for( auto col = min_col; col < max_col; col++ ) {
             int temp_x;
             int temp_y;
             if( iso_mode ) {
@@ -1159,8 +1160,16 @@ void cata_tiles::draw( const point &dest, const tripoint &center, int width, int
                 temp_y = row + o.y;
             }
             const tripoint pos( temp_x, temp_y, center.z );
-            const int &x = pos.x;
-            const int &y = pos.y;
+            row_positions.push_back( pos );
+        }
+    }
+
+    for( auto row_positions : view_positions ) {
+        std::vector<tile_render_info> draw_points;
+        draw_points.reserve( max_col );
+        for( auto pos : row_positions ) {
+            const auto &x = pos.x;
+            const auto &y = pos.y;
 
             lit_level ll;
             // invisible to normal eyes
@@ -1294,7 +1303,7 @@ void cata_tiles::draw( const point &dest, const tripoint &center, int width, int
 
             if( g->display_overlay_state( ACTION_DISPLAY_LIGHTING ) ) {
                 if( g->displaying_lighting_condition == 0 ) {
-                    const float light = here.ambient_light_at( {x, y, center.z} );
+                    const float light = here.ambient_light_at( { x, y, center.z } );
                     // note: lighting will be constrained in the [1.0, 11.0] range.
                     int intensity = static_cast<int>( std::max( 1.0, LIGHT_AMBIENT_LIT - light + 1.0 ) ) - 1;
                     draw_debug_tile( intensity, string_format( "%.1f", light ) );
@@ -1302,9 +1311,9 @@ void cata_tiles::draw( const point &dest, const tripoint &center, int width, int
             }
 
             if( g->display_overlay_state( ACTION_DISPLAY_TRANSPARENCY ) ) {
-                const float tr = here.light_transparency( {x, y, center.z} );
-                int intensity =  tr <= LIGHT_TRANSPARENCY_SOLID ? 10 :  static_cast<int>
-                                 ( ( tr - LIGHT_TRANSPARENCY_OPEN_AIR ) * 8 );
+                const float tr = here.light_transparency( { x, y, center.z } );
+                int intensity = tr <= LIGHT_TRANSPARENCY_SOLID ? 10 : static_cast<int>
+                                ( ( tr - LIGHT_TRANSPARENCY_OPEN_AIR ) * 8 );
                 draw_debug_tile( intensity, string_format( "%.2f", tr ) );
             }
 
@@ -3549,7 +3558,7 @@ void cata_tiles::get_terrain_orientation( const tripoint &p, int &rota, int &sub
     const auto ter = [&]( const tripoint & q, const bool invis ) -> ter_id {
         const auto override = ter_override.find( q );
         return override != ter_override.end() ? override->second :
-        ( !overridden || !invis ) ? here.ter( q ) : t_null;
+        ( !overridden && !invis ) ? here.ter( q ) : t_null;
     };
 
     // get terrain at x,y
